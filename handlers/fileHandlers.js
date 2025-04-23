@@ -33,6 +33,12 @@ export const uploadPurchaseHandler = async (req, res) => {
     const uploadDir = path.join(__dirname, "..", "uploads");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
+    }  else {
+      // Очистка папки uploads
+      const files = await fs.promises.readdir(uploadDir);
+      for (const file of files) {
+        await fs.promises.unlink(path.join(uploadDir, file));
+      }
     }
 
     const filePath = path.join(uploadDir, "purchase_list" + ext);
