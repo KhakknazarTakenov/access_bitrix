@@ -1,3 +1,4 @@
+// dealService.js
 import { logMessage } from "../logger/logger.js";
 import { BitrixUtils } from "../utils/bx.js";
 import { decryptText } from "../utils/crypto.js";
@@ -31,7 +32,6 @@ const parseDeliveryDate = (dateString) => {
 
 // Логика разделения продуктов и создания сделок
 export const createDeals = async (products) => {
-
   try {
     const bxLinkDecrypted = await decryptText(
         process.env.BX_LINK,
@@ -42,14 +42,16 @@ export const createDeals = async (products) => {
 
     const supplierMap = new Map();
 
+    // Группируем товары по поставщикам и значению isChecked
     for (const product of products) {
       for (const supplier of product.selectedSuppliers) {
-        /*
-         * if supplier.galochka -> ставить галочку в сделку
-         */
         const supplierId = supplier.id;
-        if (!supplierMap.has(supplierId)) {
-          supplierMap.set(supplierId, {
+        // Ключ для Map: комбинация supplierId и isChecked
+        const key = `${supplierId}_${product.checked ? 'true' : 'false'}`;
+
+        if (!supplierMap.has(key)) {
+          supplierMap.set(key, {
+            supplierId,
             name: supplier.name,
             products: [],
             isChecked: product.checked,
@@ -59,13 +61,15 @@ export const createDeals = async (products) => {
           });
         }
 
-        supplierMap.get(supplierId).products.push(product);
+        supplierMap.get(key).products.push(product);
       }
     }
 
+    console.log(supplierMap);
+
     const deals = [];
-    for (const [supplierId, { name, products, isChecked, delivery_date }] of supplierMap) {
-      const title = `Deal for ${name}`;
+    for (const [key, { supplierId, name, products, isChecked, delivery_date }] of supplierMap) {
+      const title = `Сделка для ${name} ${isChecked ? '(Запрос цены)' : ''}`;
       const contactId = supplierId; // Предполагаем, что supplierId - это contactId
       const dealId = await bx.createDeal(title, contactId, products, isChecked, delivery_date);
       deals.push(dealId);

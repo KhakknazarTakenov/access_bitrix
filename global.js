@@ -1,5 +1,6 @@
 globalThis.LOG_TYPES = {
     'E': "error",
     'A': "access",
-    'I': "info"
+    'I': "info",
+    'W': "warning"
 }

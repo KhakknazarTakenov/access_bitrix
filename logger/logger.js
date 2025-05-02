@@ -8,7 +8,7 @@ export function logMessage(type, source, messageOrError) {
     try {
         const currentTime = new Date().toLocaleString();
         const isError = type === 'error';
-        const typeLabel = isError ? '[ERROR]' : type === 'info' ? '[INFO]' : '[ACCESS]';
+        const typeLabel = isError ? '[ERROR]' : type === 'info' ? '[INFO]' : type === 'warning' ? '[WARNING]' : '[ACCESS]';
         const messageContent = isError
             ? `Error: ${messageOrError?.stack || messageOrError}`
             : `${messageOrError}`;
@@ -24,6 +24,8 @@ export function logMessage(type, source, messageOrError) {
         const logFilePath = path.join(logsDir, logFileName);
 
         fs.appendFileSync(logFilePath, formattedMessage);
+
+        console.log(`${currentTime} ${typeLabel} ${source} - log writed`);
     } catch (error) {
         console.error('Unexpected logging error:', error);
     }
