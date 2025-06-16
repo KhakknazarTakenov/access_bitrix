@@ -62,7 +62,7 @@ export const processPurchase = async (records, bxLink) => {
             // Создаём новый товар, если не найден
             productId = await bxProducts.addProduct({
                 NAME: productName,
-                PRICE: price,
+                PRICE: bitrixProduct["PRICE"],
                 MEASURE: measure,
                 [process.env.UF_PRODUCT_ACCESS_ID]: accessId,
             });
@@ -70,7 +70,7 @@ export const processPurchase = async (records, bxLink) => {
             bitrixProduct = {
                 ID: productId,
                 NAME: productName,
-                PRICE: price,
+                PRICE: bitrixProduct["PRICE"],
                 MEASURE: measure,
                 [process.env.UF_PRODUCT_ACCESS_ID]: accessId,
             };
@@ -83,7 +83,7 @@ export const processPurchase = async (records, bxLink) => {
             if (hasDifferences) {
                 await bxProducts.updateProduct(bitrixProduct.ID, {
                     NAME: productName,
-                    PRICE: price,
+                    PRICE: bitrixProduct["PRICE"],
                     MEASURE: measure,
                     [process.env.UF_PRODUCT_ACCESS_ID]: accessId,
                 });

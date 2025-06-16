@@ -65,8 +65,6 @@ export const createDeals = async (products) => {
       }
     }
 
-    console.log(supplierMap);
-
     const deals = [];
     for (const [key, { supplierId, name, products, isChecked, delivery_date }] of supplierMap) {
       const title = `Сделка для ${name} ${isChecked ? '(Запрос цены)' : ''}`;

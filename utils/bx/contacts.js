@@ -111,7 +111,7 @@ export class ContactUtils {
         try {
             const command = `crm.contact.add?fields[NAME]=${encodeURIComponent(fields.NAME)}&fields[${process.env.UF_CONTACT_ACCESS_ID}]=${fields[process.env.UF_CONTACT_ACCESS_ID]}`;
             const response = await batchRequest(this.bxLink,{ add_contact: command });
-            const contactId = response[0]?.id;
+            const contactId = response[0];
 
             if (!contactId) {
                 throw new Error("Failed to add contact");
